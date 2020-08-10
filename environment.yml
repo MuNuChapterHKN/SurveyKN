@@ -1,0 +1,12 @@
+name: SurveyKN 
+channels:
+    - defaults
+    - conda-forge
+    - plotly
+dependencies:
+    - pandas
+    - python-docx=0.8.10
+    - pyyaml
+    - psutil
+    - requests
+    - plotly=4.8.2
