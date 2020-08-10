@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SurveyKN Tutorial</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="surveykn-tutorial">SurveyKN Tutorial</h1>
+<p>Written by Can Yalnız</p>
+<h2 id="welcome">Welcome</h2>
+<p>Welcome to SurveyKN! SurveyKN is an internal tool developed for Area HR to help HR members write reports for the periodic “Soddisfazione degli Associati”. Its main purpose is to automate the most monotonous and downright boring parts of writing the reports. SurveyKN takes the answers given to the survey( in .csv format), and generates report templates( in .docx) format.<br>
+The tool is written in Python, however you don’t need to know programming or Python to use it. All you need is a terminal and you’re good to go. Now, let me show you how you, as the user, can use SurveyKN to easily generate report templates just the way you want so that we can save precious time.</p>
+<h2 id="installation--setup">Installation &amp; Setup</h2>
+<h3 id="surveykn-folder">SurveyKN Folder</h3>
+<p>Let’s do a quick head count, before we can start with setting up the tool, you need to make sure you have all the necessary files and the correct folders. <em>Initially</em>, the directory structure of the SurveyKN folder should be like so:</p>
+<pre><code>SurveyKN:
+	L Current Configuration:
+		L config.yml
+		L doctree.yml
+	L Tutorial:
+		L tutorial.md
+		L tutorial.pdf
+		L tutorial.html
+	L generate.py
+	L question.py
+	L setup.py
+	L visuals.py
+	L environment.yml
+</code></pre>
+<p>If you have all the files and folders intact, we can move on to setting up Python and the Python environment. If you have missing files to start with, please contact your colleague that pointed you to this tool in the first place and complain.</p>
+<p><strong>Important: This tutorial assumes that you are in the SurveyKN folder while running the scripts, if you get an error saying that Python cannot find the file or script, please navigate to the SurveyKN folder.</strong></p>
+<h3 id="python-the-terminal--the-environment">Python, the Terminal &amp; the Environment</h3>
+<p>Before we can start running scripts like a true pro, you need to set up Python and the execution environment correctly. If at any point you feel overwhelmed, it would be best to consult someone that has previous experience with Python. It will be worth it once we get through the setup.</p>
+<h4 id="anaconda--python">Anaconda &amp; Python</h4>
+<p>You must first install <a href="https://www.anaconda.com/products/individual">Anaconda Individual Edition</a>, which will <em>also</em> setup Python on our machine if it wasn’t already installed.</p>
+<h4 id="getting-an-anaconda-prompt-in-windows">Getting an Anaconda Prompt in Windows</h4>
+<p><em>Linux and MacOS users can simply use their terminals.</em><br>
+To proceed with the installation and the usage of SuveyKN, you need to know how to open an Anaconda prompt(we will simply refer to the prompt as a <strong>terminal</strong> for the rest of this tutorial). In Windows, if Anaconda was properly installed, you have two options:</p>
+<h5 id="anaconda-navigator">Anaconda Navigator</h5>
+<ol>
+<li>Open up Anaconda Navigator</li>
+<li>On your left, you will see a navigation menu, go to Environments</li>
+<li>Pick the environment you want to run in, if this is your first time, you will most likely have only one[base (root)] environment available, if you’re done with the setup and wish to start running the scripts, choose SurveyKN</li>
+<li>After picking the right environment, click the small triangle next to the environment’s name, the one that looks like a play button</li>
+<li>Choose “Open Terminal”</li>
+</ol>
+<h5 id="search-bar">Search Bar</h5>
+<ol>
+<li>Type “anaconda prompt” in your search bar</li>
+<li>Click on the launcher for the prompt, it could look something like “Anaconda Prompt (anaconda3)”</li>
+</ol>
+<h4 id="the-python-environment">The Python Environment</h4>
+<p>Once we have Anaconda nicely setup, you need to create yourself a virtual environment in which the scripts can feel at home. Doing this is fairly easy, just open up a terminal, navigate to your SurveyKN folder, and run the following commands, one after the other</p>
+<pre><code>conda install -c conda conda-env
+conda env create --file environment.yml
+</code></pre>
+<p>Perfect! You have created the virtual environment we’ll be using to run our scripts. Be careful though, even though we created the virtual environment, we need to step into it by activating it. To do this simply run</p>
+<pre><code>conda activate SurveyKN
+</code></pre>
+<p>This command will put us into the SurveyKN environment. <strong>Always remember to enter the SurveyKN virtual environment before working with SurveyKN. The remainder of this tutorial will assume that you are in the SurveyKN virtual environment.</strong></p>
+<p>Once we’re in our environment you need to run one last command to finish setting it up</p>
+<pre><code>conda install -c plotly plotly-orca
+</code></pre>
+<h3 id="data-root-setup">Data Root Setup</h3>
+<p>We can finally start working directly with SurveyKN! In order to function properly, SurveyKN needs to have a data root. The data root is nothing but a directory that will hold all of the data SurveyKN will generate. To setup the data root and create the necessary directories, run</p>
+<pre><code>python setup.py fresh
+</code></pre>
+<p>At this point, you will be asked to give a path for the data root. This can be any path you’d like that has the appropriate read/write privileges. In most cases, the best thing to do is to have the data root within SurveyKN by just entering a single dot( <code>.</code>  ). It is possible to move your data root later on.</p>
+<p><strong>Important: This tutorial assumes that you are in the SurveyKN folder while running the scripts, if you get an error saying that Python cannot find the file or script, please navigate to the SurveyKN folder.</strong></p>
+<h2 id="survey-results--questions">Survey Results &amp; Questions</h2>
+<p>Once SurveyKN and its requirements are set up, we can move on to the next bit. In this section we will go over how we should format the survey results file and how we need to process the questions that were in the survey.</p>
+<h3 id="survey-results">Survey Results</h3>
+<p>The survey results should be formatted in a table where each column represents a question in the survey and each row represents a member. So that in the intersection of each row and column we can see the answer that particular member gave to that question. We can also have additional columns in the table for the area, the email, the name etc. of the members. This table should be saved as a <code>.csv</code> file. This file can be anywhere in your computer.</p>
+<h3 id="questions">Questions</h3>
+<p>In order to function properly SurveyKN needs to know each question by heart. We do this by registering our questions into the <em>Question Store</em> where each will be given a unique ID code. First step is determining which questions we’re interested in. At present we don’t <em>have to</em> know exactly how we would like to structure the reports, but we should find an answer to the question “Which of the survey questions should show up in the generated reports?”. When we have the answer, we can start working with <code>question.py</code>, the script that we will use to interact with the <em>Question Store</em>. We shall only go through the most essential options of this script here, if you wish to know the full capabilities and all the things you can do by using it, you can run</p>
+<pre><code>python question.py help
+</code></pre>
+<p>in your terminal. <em>Make sure you are in the SurveyKN directory and in the SurveyKN virtual environment.</em></p>
+<h4 id="registering-a-single-question">Registering a single question</h4>
+<p>To register a single new question into the store you just run</p>
+<pre><code>python question.py new
+</code></pre>
+<p>The script will then ask you to enter the question into the terminal. Here you must pay attention to the spelling of the question and any special characters it might have. What you put in here must match <em>exactly</em> with what is in the survey. If the question has a number in the <code>.csv</code> file, such as <code>3) question text?</code>, then you should only write <code>question text?</code>.</p>
+<p><em>Tip: You can paste into most terminals using Ctrl+Shift+V if Ctrl+V isn’t working.</em></p>
+<h4 id="registering-multiple-questions-simultaneously">Registering multiple questions simultaneously</h4>
+<p>In order to register multiple new questions, you must first put these questions into a <code>.txt</code> file, where you have one question on each line. Then simply run</p>
+<pre><code>python question.py fromfile &lt;path/to/file.txt&gt;
+</code></pre>
+<p>where the path should point to the <code>.txt</code> file.</p>
+<h4 id="deleting-the-last-question-you-registered">Deleting the last question you registered</h4>
+<p>The <em>Question Store</em> allows you to delete only one question at a time and this has to be the last question you registered. To do this, you must run</p>
+<pre><code>python question.py deletelast
+</code></pre>
+<p>The program will show you what the last question inserted into the store was along with its identification code and ask for your confirmation. To proceed simply type <code>yes</code>.</p>
+<h2 id="the-doctree">The Doctree</h2>
+<p>Now, let me introduce you to the <em>Doctree</em>. Our <em>Doctree</em> file is what we will be using to tell SurveyKN exactly how to structure the reports. The file <code>doctree.yml</code> will have the tree structure of the documents and which questions we wish to include in the final templates. You can find <code>doctree.yml</code> in the folder named <code>Current Configuration</code>. We shall use the example <code>doctree.yml</code> below to learn about the tree structure, the questions and the comments.</p>
+<pre><code>General Meetings:
+    Questions:
+        - Quanto hai partecipato alle RIUNIONI GENERALI?
+        - Sei soddisfatto della gestione e della struttura delle RIUNIONI GENERALI?
+    Comments:
+        - Quali sono i tuoi suggerimenti per migliorare le RIUNIONI GENERALI?
+
+Individual Areas:
+    Area Meetings:
+        Questions:
+            - Quanto hai partecipato alle RIUNIONI D'AREA?
+            - Sei soddisfatto della gestione e della struttura delle RIUNIONI D'AREA?
+    
+    Placement Satisfaction:
+        Questions:
+            - Attualmente, sei soddisfatto dell'AREA in cui ti trovi?
+            - Sei soddisfatto delle ATTIVITÀ e/o dei PROGETTI a cui hai preso parte?
+            - Sei soddisfatto del metodo di lavoro del tuo RESPONSABILE?
+            - Il tuo RESPONSABILE ascolta le tue richieste e cerca di aiutarti/spronati a migliorare?
+    Comments:
+        - Come pensi che il tuo RESPONSABILE o la tua AREA di appartenenza possa migliorare?
+</code></pre>
+<h3 id="tree-structure">Tree Structure</h3>
+<p>The best way to organize our thoughts in the report is to use a tree structure, just like in this tutorial you’re reading where everything is neatly packed into sections, subsections, subsubsections etc. We can customize the tree structure of our reports by editing the <code>doctree.yml</code> file, which is formatted using YAML syntax.</p>
+<p>In our example, our <em>Doctree</em> has two <em>sections</em>: <code>General Meetings</code>, <code>Individual Areas</code> and <code>Individual Areas</code> has two <em>subsections</em>: <code>Area Meetings</code>, <code>Placement Satisfaction</code>. <em>Although we may not need it very frequently, keep in mind that we can go even deeper into the tree with subsubsections.</em></p>
+<h4 id="leaves">Leaves</h4>
+<p>Just like every abstract tree out there, notice that our <em>Doctree</em> has <em>leaves</em>. They are those objects that don’t have <em>children</em> of their own, they mark the end of branches. In the <em>Doctree</em>, it’s useful to think that the <em>leaves</em> are the Questions and the Comments together with their list of items.</p>
+<h3 id="questions-1">Questions</h3>
+<p>Each <code>Questions</code> “object” in our <em>Doctree</em> holds the list of questions we wish to talk about at that specific location in our tree. For example, in the above <em>Doctree</em>, we are saying that we want a <em>section</em> called <code>General Meetings</code> in our document, and we want that <em>section</em> to talk about the questions:</p>
+<pre><code>- Quanto hai partecipato alle RIUNIONI GENERALI?
+- Sei soddisfatto della gestione e della struttura delle RIUNIONI GENERALI?
+</code></pre>
+<p>Also, we are saying that we want a <em>section</em> called <code>Individual Areas</code>, we want this <em>section</em> to have a <em>subsection</em> called <code>Area Meetings</code> within this <em>subsection</em>, we want to talk about the following questions:</p>
+<pre><code>- Quanto hai partecipato alle RIUNIONI D'AREA?
+- Sei soddisfatto della gestione e della struttura delle RIUNIONI D'AREA?
+</code></pre>
+<p>etc.</p>
+<p><em>Note: We need to be careful about how we write the questions in our <em>Doctree</em>, the questions must exactly match what we’ve registered into the <em>Question Store</em>.</em><br>
+<em>Note: Every branch of our tree must end with a <code>Questions</code> object.</em></p>
+<h3 id="comments">Comments</h3>
+<p>The second type of <em>leaves</em> that we have are <code>Comments</code> “objects”. These contain a list of “questions” in the survey, that asked our members for their comments. For example, we want to include our members’ comments in the <code>General Meetings</code> section, so we put a <code>Comments</code> object with the following list</p>
+<pre><code>- Quali sono i tuoi suggerimenti per migliorare le RIUNIONI GENERALI?
+</code></pre>
+<p>Keep in mind that you can have more than one item in these lists. Also, notice that the <code>Comments</code> object within the section <code>Individual Areas</code> belongs to the <em>section</em> itself and not to any of the <em>subsections</em>. Both <em>sections</em> and <em>subsections</em> can have their own <code>Comments</code> objects.</p>
+<p><em>Note: Having a <code>Comments</code> object is <strong>not</strong> mandatory for sections, subsections or subsubsections.</em></p>
+<h2 id="configuration--customization">Configuration &amp; Customization</h2>
+<p>No that we have the structure of our reports in order, we can move on to configuring and customizing the output. We do this by editing the <code>config.yml</code> file.</p>
+<h3 id="areas">Areas</h3>
+<p>Using SurveyKN we can generate individual reports for each area. To let SurveyKN know which areas there are, we use the <code>Areas</code> field in the config file.</p>
+<h3 id="document-configuration">Document Configuration</h3>
+<p>Our config file also lets us customize various aspects of the reports. You can change the title, date and disclaimer of the reports and customize all of the fonts, sizes and properties of different parts of the report.</p>
+<h3 id="conclusion-tree">Conclusion Tree</h3>
+<p>In the config file you will see that you have the option of including a <code>Conclusion Tree</code> in the reports. If you choose this option by setting it to <code>True</code>, the generated reports will have a summarized version of the <em>Doctree</em> where you can write the conclusion for each section individually.</p>
+<h3 id="custom-charts">Custom Charts</h3>
+<p>One of the most important pieces of our reports are the data visualizations. By default, every question in the <em>Doctree</em> gets its own <em>pie chart</em>. This pie chart visually represents the answers reported by the members of the area to that specific question. However, SurveyKN also makes it possible to go above and beyond just the default pie charts.</p>
+<h4 id="global-pie-chart">Global Pie Chart</h4>
+<p>The <code>Global Pie Chart</code> is drawn from the answers of all the members that completed the current survey. It is useful for comparing the area of the report to the general standing of our association.</p>
+<h4 id="past-survey-pie-chart">Past Survey Pie Chart</h4>
+<p>The <code>Past Survey Pie Chart</code> is drawn from the answers of the members of the same area, but this pie chart plots the answers reported in a previous survey. You should put the <em>survey id</em> of the survey whose results you wish to plot in the <code>Parameters</code> field of the <code>Past Survey Pie</code> in <code>config.yml</code>. However, if you wish to draw this chart for a past survey, that survey must have been processed by SurveyKN in the past. The <em>survey id</em> of any survey is in the format <code>date-month</code>(i.e. 2020-01).</p>
+<h4 id="past-survey-bar-chart">Past Survey Bar Chart</h4>
+<p>The <code>Past Survey Bar Chart</code> takes it a step further by providing a way for us to compare multiple past survey results with the current one. The surveys you put in the <code>Parameters</code> field of the <code>Past Survey Bar</code> in <code>config.yml</code> will be plotted in a bar chart that neatly shows how the answers progressed over time. It is recommended to put the <em>survey ids</em> in chronological order, oldest to newest.</p>
+<h4 id="choosing-and-ordering-custom-charts">Choosing and Ordering Custom Charts</h4>
+<p>All of the above custom charts are at your disposal and it’s up to you to decide which of these should appear in the reports and in what order. To configure this, you just need to edit the list of <code>Custom Charts Draw</code> in <code>config.yml</code>. Only those custom charts whose names appear in this list will be drawn for the questions. The list should be in the order you wish to see the charts in the report.</p>
+<h4 id="exceptions">Exceptions</h4>
+<p>You may want to exclude some of the questions from the custom charts. If you want a question to have <strong>only</strong> the default pie chart, you need to put its <em>question id</em> into the list of <code>Custom Charts Exceptions</code> in <code>config.yml</code>.</p>
+<p><em>Note: If you’re not sure about the question id of the questions you wish to exclude, just run</em></p>
+<pre><code>python question.py listall
+</code></pre>
+<p><em>this will list all of the questions in store along with their three letter question ids.</em></p>
+<h3 id="chart-styles-structure--survey-answers">Chart Styles, Structure &amp; Survey Answers</h3>
+<h4 id="available-options">Available Options</h4>
+<p>We can customize almost everything about our charts. One of the most important aspects of any data visualization graphic is the color scheme. We can individually set the colors of all the answers to our multiple choice questions under the <code>Available Choices</code> field in <code>config.yml</code>. Each entry in this field should look like this</p>
+<pre><code>Molto: 
+	Hex: '#171C42'
+	Label: Molto
+</code></pre>
+<p>Where <code>Molto</code> is one of the available choices to at least one of our questions, <code>Hex</code> is the hex value of the color we want to assign to this option and <code>Label</code> is what we want to show up in the charts to represent this answer. As you can see, for <code>Molto</code> we can assign it directly to its label, however, for an option that’s quite lengthy like this</p>
+<pre><code>Dovrò lasciarvi al termine della sessione esami:
+	Hex: '#19D3F3'
+	Label: Arrivaderci
+</code></pre>
+<p>It could be more visually appealing on the graphs to write <code>Arrivaderci</code> instead of <code>Dovrò lasciarvi al termine della sessione esami</code>, since it’s so lengthy.</p>
+<p><strong>Important: The options listed under the <code>Available Options</code> field should have the same spelling as all of the instances of that answer that appear in the survey. If you have both <code>Più no che sì</code>  and <code>Piu no che sì</code> in the survey results, you shouldn’t add two entries for the different spellings to the <code>Available Options</code> field, instead you should keep the spelling consistent in the survey results.</strong></p>
+<h4 id="pie-chart-style">Pie Chart Style</h4>
+<h5 id="lines">Lines</h5>
+<p>You can even customize the lines that make up the edges of our pie charts. You can change the color and width of these lines by editing the <code>Line Color</code> and the <code>Line Width</code> fields of the <code>Pie Chart Style</code> field in <code>config.yml</code> respectively.</p>
+<h5 id="text-information-on-the-charts">Text Information on the Charts</h5>
+<p>When it comes to how you would like to support what the pie chart has visualized using colors and proportions, you have three ingredients you can use:</p>
+<ol>
+<li>Value: The count of the answers ( i.e. if three people picked <code>Molto</code>, on the slice that represents <code>Molto</code> you will see a <code>3</code>)</li>
+<li>Percent: The percentage of the answers ( i.e. if three people picked <code>Molto</code> and there are a total of 6 people, on the slice that represents <code>Molto</code> you will see <code>50%</code> )</li>
+<li>Label: The label of the answers ( the mapping between the labels and the colors in the charts are shown in the legend by default, but if you also want to see the labels of the answers on each slice of the pie, then you should enable this )</li>
+</ol>
+<p>These three can be enabled or disabled independently of each other. All of those you have enabled will show up on the slices. You can enable\disable these in <code>Pie Chart Style</code> in <code>config.yml</code> by setting the respective fields to True\False</p>
+<h2 id="generating-reports">Generating Reports</h2>
+<p>At last we’re here. Now that we’ve setup our Python environment, our data root, registered our questions, created our <em>Doctree</em> and updated the configuration, we are ready to generate the reports. Since we’ve done most of the work, generating the reports is going to be quite straightforward. Just run</p>
+<pre><code>python generate.py &lt;path/to/survey.csv&gt;
+</code></pre>
+<p>Where <code>&lt;path/to/survey.csv&gt;</code> is the path to the <code>.csv</code> file of the survey you wish to generate the reports of. The program will ask for your confirmation and then ask you for the year of the survey, then the month of the survey in order to assign its survey ID as <code>year-month</code>. Once you provide this information, the program will go through your <em>Doctree</em> to see if there are any questions missing from the <em>Question Store</em>. If there are questions in your <em>Doctree</em> that you haven’t registered, the program will ask you if you’d like to register these questions before proceeding. Once this is done, the program will generate the reports. You can find the generated reports under SurveyKN/SurveyKN-dataroot/Templates/&lt;survey_id&gt; where &lt;survey_id&gt; is <code>year-month</code> of the survey(i.e 2020-01). In this folder you’ll find the generated reports as well as copies of the config and doctree files that were used to generate these reports for future reference.</p>
+<h2 id="data-root-directory-structure">Data Root Directory Structure</h2>
+<p>Now, let’s quickly go over the directory structure of SurveyKN’s data root.</p>
+<pre><code>SurveyKN-dataroot:
+	L AppData:
+		L question-store.yml
+	L Surveys:
+		L &lt;survey_id-original.csv&gt;
+		L &lt;survey_id.csv&gt;
+	L Templates:
+		L &lt;survey_id&gt;
+			L config.yml
+			L doctree.yml
+			L &lt;area.docx&gt;
+	L Visuals:
+		L &lt;survey_id&gt;:
+			L &lt;area&gt;:
+				L &lt;question_id-chart_id.png&gt;
+</code></pre>
+<h3 id="appdata">AppData</h3>
+<p>Contains the <em>Question Store</em>.</p>
+<h3 id="surveys">Surveys</h3>
+<p>Contains copies of the survey <code>.csv</code> files used for generating the reports. The <code>.csv</code> file with <code>original</code> in its name is an identical copy of the original survey file, the <code>.csv</code> file <strong>without</strong> <code>original</code> in its name is modified to facilitate processing.</p>
+<h3 id="templates">Templates</h3>
+<p>Contains one directory per survey, each one of these directories hold the generated report templates as well as their config and doctree files.</p>
+<h3 id="visuals">Visuals</h3>
+<p>Contains one directory per survey, each of these directories contain one directory per area, each of these directories contain the generated data visualization images in <code>.png</code> format.</p>
+<h2 id="handing-surveykn-down">Handing SurveyKN Down</h2>
+<p>SurveyKN not only makes it easier to write our periodic reports, but it also keeps a consistent record of all of the surveys that we’ve carried out as Area HR. Therefore it is important to make sure no data is lost while SurveyKN is handed down from one area head to the next.</p>
+<p>The first thing to do is to have the new area head follow the steps under the <code>Installation &amp; Setup</code> section above. They must do everything except for the <code>Data Root Setup</code>.</p>
+<p>Once the <code>Installation &amp; Setup</code> is done at the destination, there are only two folders that need to change hands: <code>SurveyKN</code> and <code>SurveyKN-dataroot</code>. If during the hand-down, your <code>SurveyKN-dataroot</code> folder is somewhere inside your <code>SurveyKN</code> folder, it is sufficient to hand over only the <code>SurveyKN</code> folder and its contents. However, if your data root is located somewhere else on your system, you must make sure both folders are transferred correctly. Once the folders are received on the other end, the new area head must place <code>SurveyKN-dataroot</code> somewhere they see fit, and then run</p>
+<pre><code>python setup.py redirect
+</code></pre>
+<p>to tell SurveyKN where the new data root on their system is.</p>
+</div>
+</body>
+
+</html>

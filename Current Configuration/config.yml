@@ -1,0 +1,254 @@
+# ////////////////////     AREAS
+# The area names as they appear in the csv file in the AREA column
+Areas:
+    - Comunicazione
+    - IT
+    - Tutoring
+    - Eventi
+    - HR
+    - Formazione Interna
+
+
+
+# ////////////////////     DOCUMENT CONFIGURATION
+# The generated reports will all have this title
+Document Title:
+    Text: "Evaluation of the Answers to the Satisfaction Survey"
+    Font: "Arial"
+    Font Size: 21
+    Font Color: "#000000"
+    Middle Aligned: True # True => Title in the middle , False => Title left aligned
+    Bold: True
+    Italic: False
+
+# Here you can format the date on the generated documents
+# The date will automatically be printed according to the
+# execution time of the script
+Document Date:
+    # If Today is True, the program will get the date during its
+    # execution and generate the documents with that date
+    # If Today is False, the reports will be generated using
+    # the date of the survey
+    Today: False
+    Font: "Arial"
+    Font Size: 15
+    Font Color: "#666666"
+    Bold: False
+    Italic: False
+
+# The doccument metadata contains points such as Author,
+# Area Analyzed, Number of Respondents to the Questionnaire
+Document Metadata:
+    Font: "Arial"
+    Font Size: 12
+    Font Color: "#000000"
+    Bold: False
+    Italic: False
+
+# The document disclaimer comes right after the metadata
+Document Disclaimer:
+    Text: >
+        The disclaimer goes here, it's fully customizable. You can write anything you want
+        in here! You should check out 'Current Configuration/config.py' for more options
+        and details.
+    Font: Arial
+    Font Size: 12
+    Font Color: "#000000"
+    Bold: False
+    Italic: True
+
+# Sections are the elements of the first level of the doctree
+Document Section Heading:
+    Font: "Arial"
+    Font Size: 20
+    Font Color: "#000000"
+    Bold: False
+    Italic: False
+
+# Subsections are the elements of the second level of the doctree
+Document Subsection Heading:
+    Font: "Arial"
+    Font Size: 16
+    Font Color: "#000000"
+    Bold: False
+    Italic: False
+
+# Subsubsections are the elements of the third level of the doctree
+Document Subsubsection Heading:
+    Font: "Arial"
+    Font Size: 14
+    Font Color: "#434343"
+    Bold: False
+    Italic: False
+
+# The formatting for the paragraphs that will be used throughout
+# the document
+Document Paragraph:
+    Font: "Arial"
+    Font Size: 11
+    Font Color: "#000000"
+    Bold: False
+    Italic: False
+
+# If the conclusion tree option is set to True, then a conclusion
+# Section will automatically be generated which will have the Sections
+# from the original file as Subsections so that you can give a summary
+# for each section individually at the end
+Document Conclusion Tree: True
+
+# If you put N>0 as the image multiplier, the resolution of the data
+# visualization images that appear in the document will be Original*N
+Document Data Visual Resolution Multiplier: 2
+
+
+
+# ////////////////////     CUSTOM CHARTS
+# By default, for each multiple choice question in doctree.yml a single chart is drawn
+# The default chart represents the answers reported only by the members of the specific areas at the given survey
+# If you wish to also include extra charts for comparison, you must set the corresponding Draw values to True
+Custom Charts:
+
+    # A pie chart that includes answers from all of the members
+    Global Pie:
+        # A single character unique identifier for the custom chart
+        ID: G
+
+        # You must leave this as Null, this chart doesn't accept parameters
+        Parameters: Null
+
+    # A pie chart that represents the answers from a previous survey
+    Past Survey Pie:
+        # A single character unique identifier for the custom chart
+        ID: P
+
+        # This chart accepts a single string
+        # Here you must write the ID of the past survey whose results you wish to represent
+        Parameters: 2020-01
+
+    # A stacked bar chart that shows the question's answers' evolution over time 
+    Past Survey Bar:
+        # A single character unique identifier for the custom chart
+        ID: B
+
+        # This chart accepts a list of strings
+        # Here you must write the ID of the surveys whose results you wish to represent
+        # Don't include the current survey in the list
+        Parameters:
+            - 2020-01
+            - 2020-01
+            - 2020-01
+
+Custom Charts Draw:
+    - Global Pie
+
+# By default the custom charts selected above will be drawn for every single multiple choice question in
+# the doctree, however, there may be questions in there that should NOT include any extra charts, if
+# you put the ID of a question here, that question will NOT have any of the custom charts,
+# it will only have the default chart showing the latest answers
+Custom Charts Exceptions:
+    - AAA
+    - AAB
+
+
+
+# ////////////////////    CHART STYLES & STRUCTURE
+
+# Possible answers to the multiple choice questions as they appear in the csv file
+# The hex values represent their colors in the graphs
+Available Choices:
+    # STANDARD
+    Molto: 
+        Hex: '#171C42'
+        Label: Molto
+    Abbastanza: 
+        Hex: '#1E6EA1'
+        Label: Abbastanza
+    Più sì che no:
+        Hex: '#8EB5C2'
+        Label: Più sì che no
+    Piu no che sì: 
+        Hex: '#F0C6C3'
+        Label: Piu no che sì
+    Più no che sì:
+        Hex: '#F0C6C3'
+        Label: Piu no che sì
+    Piu no che si:
+        Hex: '#F0C6C3'
+        Label: Piu no che sì
+    Poco:
+        Hex: '#CB6563'
+        Label: Poco
+    Per niente:
+        Hex: '#780E28'
+        Label: Per niente
+    Non posso esprimere un giudizio:
+        Hex: '#A9A9A9'
+        Label: Non so
+    Non essendo attivo non ho lavorato con l'attuale responsabile.:
+        Hex: '#A9A9A9'
+        Label: Non so
+    Non essendo attivo, non ho una chiara idea del lavoro del board.:
+        Hex: '#A9A9A9'
+        Label: Non so
+    Non essendo attivo, non ho avuto l'opportunità di interagire con il board.:
+        Hex: '#A9A9A9'
+        Label: Non so
+
+    # DATE
+    Marzo 2019:
+        Hex: '#636EFA'
+        Label: Mar 2019
+    Ottobre 2019:
+        Hex: '#EF553B'
+        Label: Ott 2019
+    Marzo 2018:
+        Hex: '#00CC96'
+        Label: Mar 2018
+    Ottobre 2018:
+        Hex: '#AB63FA'
+        Label: Ott 2018
+    Ottobre 2017:
+        Hex: '#FFA15A'
+        Label: Ott 2018
+    Pre-Installation (Da settembre 2016):
+        Hex: '#19D3F3'
+        Label: Pre-Inst.
+
+    # FORECAST
+    Più di 2 anni:
+        Hex: '#636EFA'
+        Label: 2+ anni
+    2 anni:
+        Hex: '#EF553B'
+        Label: 2 anni
+    3 semestri (1,5 anni):
+        Hex: '#00CC96'
+        Label: 3 semestri
+    1 anno:
+        Hex: '#AB63FA'
+        Label: 1 anno
+    1 semestre:
+        Hex: '#FFA15A'
+        Label: 1 semestre
+    Dovrò lasciarvi al termine della sessione esami:
+        Hex: '#19D3F3'
+        Label: Arrivaderci
+
+# The color of the lines in the pie charts
+Pie Chart Style: 
+
+    # The properties of the lines of the pie charts
+    Line Color: "#FFFFFF"
+    Line Width: 2
+    
+    # What to show on each slice of the pie charts,
+    # multiple values can be True at once
+    On Each Slice:
+        Show Value: False # The count of the answer
+        Show Percent: True # The percentage of the answer
+        Show Label: False # The text of the answer
+
+        Font: 15 # The font of the above specified info
+
+
+
