@@ -173,6 +173,8 @@ No that we have the structure of our reports in order, we can move on to configu
 ### Areas
 Using SurveyKN we can generate individual reports for each area. To let SurveyKN know which areas there are, we use the `Areas` field in the config file.
 
+*Note: There must be at least one area for the program to work.*
+
 ### Document Configuration
 Our config file also lets us customize various aspects of the reports. You can change the title, date and disclaimer of the reports and customize all of the fonts, sizes and properties of different parts of the report.
 
@@ -194,8 +196,12 @@ The `Past Survey Bar Chart` takes it a step further by providing a way for us to
 #### Choosing and Ordering Custom Charts
 All of the above custom charts are at your disposal and it's up to you to decide which of these should appear in the reports and in what order. To configure this, you just need to edit the list of `Custom Charts Draw` in `config.yml`. Only those custom charts whose names appear in this list will be drawn for the questions. The list should be in the order you wish to see the charts in the report.
 
+*Note: If you don't want any custom charts, then instead of leaving this field empty in the config file, you must have it as* `Custom Charts Draw: Null`.
+
 #### Exceptions
 You may want to exclude some of the questions from the custom charts. If you want a question to have **only** the default pie chart, you need to put its *question id* into the list of `Custom Charts Exceptions` in `config.yml`.
+
+*Note: If you don't wish to exclude any of the questions from the custom charts, then instead of leaving this field empty in the config file, you must have it as* `Custom Charts Exceptions: Null`.
 
 *Note: If you're not sure about the question id of the questions you wish to exclude, just run*
 ```
@@ -280,4 +286,3 @@ Once the `Installation & Setup` is done at the destination, there are only two f
 python setup.py redirect
 ```
 to tell SurveyKN where the new data root on their system is.
-
