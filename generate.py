@@ -456,7 +456,7 @@ def process_survey(survey_id, question_store, working_inverted_question_store, s
     new_column_names = []
     for column in survey.columns:
         # Remove the leading 'n) ' for the questions that have it
-        question = column.strip('123456789) ')
+        question = column.strip('1234567890) ')
         
         # If this is a question that's in the working question store updates
         # the question's history in the store and replaces the question
