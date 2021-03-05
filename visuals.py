@@ -37,6 +37,7 @@ def draw_pie(question, values, config, date, area, textinfo):
     
     labels = []
     colors = []
+    ordered_values = []
     
     answers = values.index
     
@@ -52,11 +53,12 @@ def draw_pie(question, values, config, date, area, textinfo):
         if option in answers:
             labels.append(options[option]["Label"])
             colors.append(options[option]["Hex"])
+            ordered_values.append(values[option])
         
     pie_chart_style = config["Pie Chart Style"]
     annotation_list = [dict(text=area, x=0, y=1.07, font_size=17, showarrow=False), dict(text=date, x=0, y=1, font_size=17, showarrow=False)]
     
-    fig = go.Figure( data=[ go.Pie( labels = labels, values = values ) ] )
+    fig = go.Figure( data=[ go.Pie( labels = labels, values = ordered_values ) ] )
     fig.update_traces( textinfo=textinfo, textfont_size=pie_chart_style["On Each Slice"]["Font"],
                           marker=dict( colors=colors, line=dict(color=pie_chart_style["Line Color"], width=pie_chart_style["Line Width"]) ) )
     
