@@ -4,4 +4,4 @@ Welcome to SurveyKN! SurveyKN is an internal tool developed for Area HR to help 
 The tool is written in Python, however you don't need to know programming or Python to use it. All you need is a terminal and you're good to go.
 
 ## Acknowledgments
-Special thanks to [Paolo](https://github.com/paolotron) for extensively testing SurveyKN and discovering numerous crucial bugs as well as operating it for Area HR.
+Special thanks to [Paolo Rabino](https://github.com/paolotron) for extensively testing SurveyKN and discovering numerous crucial bugs as well as operating it for Area HR.
